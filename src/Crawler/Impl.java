@@ -5,15 +5,12 @@ import org.apache.jena.rdf.model.ModelFactory;
 
 
 public class Impl implements SemanticCrawler{
-	private String URI;
-	private Model model;
+	private String URI;	
 	
 	public Impl(String URI) {
 		System.out.println(URI);
 		this.URI = URI;
-		System.out.println("Gate 1");
-		this.model = ModelFactory.createDefaultModel();
-		System.out.println("Gate 2");
+		Model model = ModelFactory.createDefaultModel();			
 		SemanticCrawler.search(model, URI);
 	}
 	
