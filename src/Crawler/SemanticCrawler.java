@@ -23,14 +23,14 @@ public interface SemanticCrawler {
 		StmtIterator statements = model.listStatements((Resource)null,OWL.sameAs,(RDFNode)null);
 		while (statements.hasNext()) {
 			Statement statement = statements.nextStatement();
-			if (statement.getObject() instanceof Resource) {
+			if (statement.getObject() instanceof Resource) { //se é um recurso com URI
 				Resource ObjResource = (Resource) statement.getObject();
 				if (!URIsVisitadas.contains(ObjResource.getURI())) {
 					search(model, ObjResource.getURI());
 					System.out.println("URI obtida: "+ObjResource.getURI());
 				}
 			} else {
-				RDFNode ObjNode = (RDFNode) statement.getObject();
+				RDFNode ObjNode = (RDFNode) statement.getObject(); //Se é um nó em branco
 			}			
 		}
 		}
