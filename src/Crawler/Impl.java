@@ -12,6 +12,7 @@ import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
 import org.apache.jena.vocabulary.OWL;
 
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
 import java.util.ArrayList;
@@ -37,9 +38,9 @@ public class Impl implements SemanticCrawler{
 				Set<String> set = new HashSet<String>(URIsVisitadas);				  
 				boolean isVisited = set.contains(object.getURI());				
 				
-				//debug no console
+				/*//monitoramento de URIs no console
 				System.out.println("\nNova URI obtida: "+object.getURI());
-				if (isVisited) System.out.println("URI: já visitada\n");
+				if (isVisited) System.out.println("URI: já visitada\n");*/
 				
 				if (enc.canEncode(object.getURI()) && !isVisited && !object.isAnon()) { //Testa se a URI é composta apenas caracteres do alfabeto latino (ISO 8859-1), se não foi visitada antes e se não é um nó em branco
 					search(model, object.getURI());	//chama recursivamente o o método search para analisar a nova URI que é OWL.sameAs com o Sujeito								
@@ -48,13 +49,13 @@ public class Impl implements SemanticCrawler{
 					search(model, object.getId().toString()); //chama recursivamente o o método search para analisar o nó em branco que é OWL.sameAs com o Sujeito							
 				}					
 			}	
-		//tratamento de erros 
+		//tratamento de erros                                        
 		}catch (Exception e) {
 			System.err.println ("Erro ao tentar abrir URI: "+e.getMessage());
 		}catch (NoClassDefFoundError error) {
 			System.err.println ("Erro de classe não encontrada ao tentar abrir URI: "+error.getMessage());
 		}
-		}
-	
+	}
+
 
 }
