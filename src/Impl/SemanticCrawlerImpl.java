@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
@@ -21,14 +22,17 @@ import java.util.ArrayList;
 public class SemanticCrawlerImpl implements SemanticCrawler{	
 	private ArrayList<String> URIsVisitadas = new ArrayList<>();	
 	private CharsetEncoder enc = Charset.forName("ISO-8859-1").newEncoder(); //variável declaradas como atributo para economizar recurso ao não instanciar a cada passagem da estrutura de repetição
-
+	private Model tempModel = ModelFactory.createDefaultModel();
+	
 	public SemanticCrawlerImpl() {}
 	
 	public void search(Model model, String resourceURI) {		
-		try {
-			model.read(resourceURI); //Lê o RDF da URI		
+		try {			
+			tempModel.read(resourceURI); //Lê o RDF da URI num modelo temporário
+			StmtIterator getTriplas = tempModel.listStatements(tempModel.createResource(resourceURI),(Property)null,(RDFNode)null); //lista no statement apenas as triplas com o Recurso sendo URI em análise
+			model.add(getTriplas);	// Adiciona as trilas lidas ao modelo		
 			URIsVisitadas.add(resourceURI); //adiciona a URI à lista de visitadas
-			StmtIterator statements = model.listStatements((Resource)null,OWL.sameAs,(RDFNode)null); //Coloca no statmentes apenas as triplas com o predicado OWN.sameAs
+			StmtIterator statements = model.listStatements(model.createResource(resourceURI),OWL.sameAs,(RDFNode)null); //Coloca no statmentes apenas as triplas com o predicado OWN.sameAs
 			while (statements.hasNext()) { // varre as triplas do statment				
 				Statement statement = statements.nextStatement(); //adiciona a tripla corrente em um statment			
 				Resource object = (Resource) statement.getObject();	//recebe o objeto da tripla em análise			
